@@ -52,3 +52,5 @@ htmlcov/
 # Others
 .DS_Store
 Thumbs.db
+*.db
+*.sqlite

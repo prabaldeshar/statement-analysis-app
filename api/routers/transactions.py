@@ -1,7 +1,8 @@
-from db.core import get_session
-from db.transactions import get_transactions
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
+
+from api.db.core import get_session
+from api.db.transactions import get_transactions
 
 router = APIRouter(
     prefix="/transactions",

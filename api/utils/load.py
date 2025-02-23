@@ -1,75 +1,65 @@
 from datetime import datetime
+from typing import List
 
-import plotly.express as px
-from api.services.infer import infer
-from models import (create_transaction_obj, create_transactions,
-                    get_all_transactions, get_transactions_grouped_by_category)
+from fastapi import Depends
+from sqlmodel import Session
+
+from api.db.core import Transaction, get_session
+from api.db.transactions import create_transaction_obj, get_existing_date_list
+from api.services.openai_service import OpenAIService
 from api.utils.process_excel import process_raw_excel
 
-file_path = "data/statement-2025-01-01-to-2025-01-01.xlsx"
+
+def determine_transaction_type(withdraw, deposit):
+    if withdraw != "-":
+        return "withdraw", float(withdraw.replace(",", ""))
+    else:
+        return "deposit", float(deposit.replace(",", ""))
 
 
-def insert_transation(file_path):
+def get_transactions(file_path, db) -> List[Transaction]:
     df = process_raw_excel(file_path)
-
+    openai_service = OpenAIService()
+    existing_date_list = get_existing_date_list(db)
     all_transactions = []
+
     for index, row in df.iterrows():
         datetime_str = row["TRANSACTION DATE"]
         description = row["DESCRIPTION"]
         withdraw = row["WITHDRAW"]
         deposit = row["DEPOSIT"]
-        amount = 0
+        amount = 0.0
+
+        if datetime_str in existing_date_list:
+            print(f"Skipping row {index}")
+            continue
 
         dt_obj = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+
         date_only = dt_obj.date()
 
-        if withdraw != "-":
-            type_of_transaction = "withdraw"
-            amount = float(withdraw.replace(",", ""))
-        else:
-            type_of_transaction = "deposit"
-            amount = float(deposit.replace(",", ""))
+        type_of_transaction, amount = determine_transaction_type(withdraw, deposit)
 
-        response = infer(description)
+        response = openai_service.infer(description)
         response["type_of_transaction"] = type_of_transaction
         response["date"] = date_only
 
         payment_method = response.get("transfer", {}).get("transfer_type", "QR")
         payee = response.get("transfer", {}).get("destination", "self")
+        category = response["category"]
+        transaction_id = response["transaction_id"]
 
         transaction = create_transaction_obj(
-            date=dt_obj,
+            transaction_date=dt_obj,
             description=description,
             type_of_transaction=type_of_transaction,
             amount=amount,
             payment_method=payment_method,
             payee=payee,
-            category=response["category"],
-            transaction_id=response["transaction_id"],
+            category=category,
+            transaction_id=transaction_id,
         )
+
         all_transactions.append(transaction)
 
-    print("Creating all transactions....")
-    create_transactions(all_transactions)
-
-
-def get_transactions():
-    all_transactions = get_all_transactions()
     return all_transactions
-
-
-def main():
-    # all_transactions = get_transactions()
-    transaction_by_category = get_transactions_grouped_by_category()
-    labels = []
-    values = []
-    for transaction in transaction_by_category:
-        labels.append(transaction[0])
-        values.append(transaction[1])
-
-    fig = px.pie(names=labels, values=values)
-    fig.show()
-
-
-if __name__ == "__main__":
-    main()

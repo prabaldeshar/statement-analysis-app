@@ -1,8 +1,10 @@
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers.expenses import router as expenses_router
-from routers.filter import router as filter_router
-from routers.transactions import router as transaction_router
+
+from api.routers.expenses import router as expenses_router
+from api.routers.filter import router as filter_router
+from api.routers.transactions import router as transaction_router
+from api.routers.upload import router as upload_router
 
 test_router = APIRouter()
 
@@ -16,6 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @test_router.get("/posts")
 async def posts():
     return {"posts": "test"}
@@ -24,6 +27,7 @@ async def posts():
 app.include_router(transaction_router)
 app.include_router(expenses_router)
 app.include_router(filter_router)
+app.include_router(upload_router)
 app.include_router(test_router)
 
 

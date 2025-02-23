@@ -1,10 +1,12 @@
 from datetime import datetime
-from typing import Annotated, List, Optional
+from typing import Annotated, List
 
-from db.core import Transaction, get_session
 from fastapi import Depends
 from pydantic import BaseModel
-from sqlmodel import Field, Session, SQLModel, create_engine, func, select
+from sqlmodel import Session, func, select
+
+from api.db.core import Transaction, get_session
+from api.utils import datetime_utils
 
 
 class Item(BaseModel):
@@ -124,3 +126,60 @@ def get_transactions(session: SessionDep):
     ]
 
     return formatted_transactions
+
+
+def create_transaction_obj(
+    transaction_date: str,
+    description: str,
+    type_of_transaction: str,
+    amount: float,
+    payment_method: str,
+    transaction_id: str,
+    payee: str,
+    category: str,
+):
+    return Transaction(
+        transaction_date=transaction_date,
+        description=description,
+        type_of_transaction=type_of_transaction,
+        amount=amount,
+        payment_method=payment_method,
+        payee=payee,
+        category=category,
+        transaction_id=transaction_id,
+    )
+
+
+def create_transactions(transactions: List, session: Session) -> None:
+    session.add_all(transactions)
+    session.commit()
+
+
+def get_existing_date_list(session: Session) -> list:
+    existing_dates = session.exec(select(Transaction.transaction_date).distinct())
+    existing_dates_list = list(existing_dates)
+
+    return existing_dates_list
+
+
+def check_and_create_transactions(transactions: List[Transaction], session: Session):
+    existing_dates_list = get_existing_date_list(session)
+    existing_datetime_list = list(
+        map(datetime_utils.convert_datetime_str_to_datetime, existing_dates_list)
+    )
+    print("Existing date list ", existing_datetime_list)
+
+    new_data = [
+        transaction
+        for transaction in transactions
+        if transaction.transaction_date not in existing_datetime_list
+    ]
+    length_of_data = len(new_data)
+
+    print("New data", new_data)
+
+    if new_data:
+        create_transactions(new_data, session)
+        print(f"Number of new transactions created: {length_of_data}")
+
+    return len(new_data)

@@ -1,11 +1,10 @@
 from io import BytesIO
 
-from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi import APIRouter, Depends, UploadFile
 from sqlmodel import Session
 
 from api.db.core import get_session
-from api.db.transactions import check_and_create_transactions, get_transactions
-from api.utils.load import get_transactions
+from api.tasks.transaction_tasks import task_create_transaction
 from api.utils.process_excel import process_raw_excel
 
 router = APIRouter(
@@ -18,12 +17,13 @@ async def upload_statement(file: UploadFile, db: Session = Depends(get_session))
     contents = await file.read()
     buffer = BytesIO(contents)
 
-    # TODO run part in the background
-    transactions = get_transactions(buffer, db)
-    print("Transactions extracted successfully")
+    df = process_raw_excel(buffer)
+    df_json = df.to_json(orient="records")
 
-    if transactions:
-        print("Updating the DB with the transactions")
-        check_and_create_transactions(transactions, db)
+    task = task_create_transaction.delay(df_json)
 
-    return {"filename": file.filename, "message": "File uploaded successfully"}
+    return {
+        "filename": file.filename,
+        "message": "File uploaded successfully, processing the file",
+        "task_id": task.id,
+    }

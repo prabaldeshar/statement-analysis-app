@@ -1,13 +1,11 @@
 from datetime import datetime
 from typing import List
 
-from fastapi import Depends
-from sqlmodel import Session
+from pandas import DataFrame
 
-from api.db.core import Transaction, get_session
-from api.db.transactions import create_transaction_obj, get_existing_date_list
+from api.db.core import Transaction
+from api.db.transactions import create_transaction_obj
 from api.services.openai_service import OpenAIService
-from api.utils.process_excel import process_raw_excel
 
 
 def determine_transaction_type(withdraw, deposit):
@@ -17,10 +15,10 @@ def determine_transaction_type(withdraw, deposit):
         return "deposit", float(deposit.replace(",", ""))
 
 
-def get_transactions(file_path, db) -> List[Transaction]:
-    df = process_raw_excel(file_path)
+def get_transaction_details(
+    df: DataFrame, existing_date_list: List
+) -> List[Transaction]:
     openai_service = OpenAIService()
-    existing_date_list = get_existing_date_list(db)
     all_transactions = []
 
     for index, row in df.iterrows():

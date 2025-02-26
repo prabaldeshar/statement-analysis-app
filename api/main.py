@@ -1,6 +1,8 @@
+from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.db.core import init_db
 from api.routers.expenses import router as expenses_router
 from api.routers.filter import router as filter_router
 from api.routers.tasks import router as tasks_router
@@ -10,7 +12,13 @@ from api.routers.upload import router as upload_router
 test_router = APIRouter()
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

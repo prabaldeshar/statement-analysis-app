@@ -4,8 +4,8 @@ from api.config.settings import settings
 
 app = Celery(
     "api",
-    broker=settings.redis_url,
-    backend=settings.redis_url,
+    broker=settings.REDIS_URL,
+    backend=settings.REDIS_URL,
     include="api.tasks.transaction_tasks",
 )
 

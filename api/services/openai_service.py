@@ -1,16 +1,13 @@
-import os
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
 from api.services.system_prompt import response_format, system_prompt
-
-load_dotenv()
+from api.config.settings import settings
 
 
 class OpenAIService:
     def __init__(self):
-        self.openai_api_key = os.getenv("OPENAI_API_KEY")
+        self.openai_api_key = settings.OPENAI_API_KEY
         self.client = OpenAI(api_key=self.openai_api_key)
 
     def infer(self, user_input: str) -> dict:

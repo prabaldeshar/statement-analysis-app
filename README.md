@@ -11,8 +11,10 @@ This application helps users analyze and track their expenses by processing bank
 - ⚡ FastAPI Backend: Provides APIs to fetch categorized transactions and spending insights.
 - 🎨 Next.js Frontend: Displays charts and tables using Recharts and Bootstrap styling.
 
+## Run the application
+Make sure you have docker and docker compose installed if you want to run the application using docker
 
-## Run frontend 
+### Run frontend 
 Go to the frontend directory
 
 ```
@@ -23,7 +25,9 @@ Then run the docker compose command
 docker componse up --build -d
 ```
 
-## Run Backend
+Access the application at http://localhost:3000
+
+### Run Backend
 Go the the backend directory
 
 ```
@@ -46,4 +50,22 @@ Then run the docker compose command
 docker compose up --build -d
 ```
 
-Access the backend at 
+Server will run on the following URL http://localhost:8001
+
+Access the available APIs from http://localhost:8001/docs
+
+### How to use
+Download the bank statement from your mobile banking applicaition. 
+
+Go the the URL http://localhost:3000
+
+Upload your statement by clicking the `Upload Statement` Button
+
+![Upload Statement](docs/images/uplaod_statement.png)
+
+Here you can Select the excel file or drag and drop the statement.
+
+
+![Upload Dialog](docs/images/upload_dialog.png)
+
+After selecting the file and uploadig it it takes some time to display the charts and table, refresh the page after some time to see the updated charts and graphs

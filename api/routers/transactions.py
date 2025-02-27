@@ -11,5 +11,8 @@ router = APIRouter(
 
 @router.get("/")
 async def get_all_transactions(request: Request, db: Session = Depends(get_session)):
+    """
+        Get all transactions
+    """
     transactions = get_transactions(db)
     return transactions

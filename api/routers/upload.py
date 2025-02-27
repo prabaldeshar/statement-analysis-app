@@ -13,7 +13,10 @@ router = APIRouter(
 
 
 @router.post("/statement/")
-async def upload_statement(file: UploadFile, db: Session = Depends(get_session)):
+async def upload_statement(file: UploadFile, db: Session = Depends(get_session)) -> dict:
+    """
+        Upload bank statement
+    """
     contents = await file.read()
     buffer = BytesIO(contents)
 

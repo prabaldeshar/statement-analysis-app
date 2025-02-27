@@ -2,9 +2,11 @@ from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 
 from api.db.core import get_session
-from api.db.transactions import (get_all_expenses_ordered_by_date,
-                                 get_expense_by_payment_method,
-                                 get_expense_categories)
+from api.db.transactions import (
+    get_all_expenses_ordered_by_date,
+    get_expense_by_payment_method,
+    get_expense_categories,
+)
 
 router = APIRouter(
     prefix="/expenses",

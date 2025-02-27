@@ -1,14 +1,16 @@
-from typing import ClassVar
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    redis_url: ClassVar[str] = "redis://127.0.0.1:6379/0"
+    OPENAI_API_KEY: str
+    REDIS_URL: str
+    DATABASE_HOST: str = "locahost:5432"
+    DATABASE_NAME: str
+    DATABASE_USER: str
+    DATABASE_PASSWORD: str
 
-    class Config:
-        env_file = "../.env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()

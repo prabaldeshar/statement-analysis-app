@@ -9,7 +9,10 @@ router = APIRouter(
 
 
 @router.get("/status/{task_id}")
-async def get_task_status(task_id: str):
+async def get_task_status(task_id: str) -> dict:
+    """
+        Check the background task's status
+    """
     task_result = AsyncResult(task_id, app=app)
 
     if task_result.status == "SUCCESS":

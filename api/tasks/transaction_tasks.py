@@ -1,8 +1,7 @@
 import pandas as pd
 
 from api.db.core import get_session
-from api.db.transactions import (check_and_create_transactions,
-                                 get_existing_date_list)
+from api.db.transactions import check_and_create_transactions, get_existing_date_list
 from api.utils.load import get_transaction_details
 from api.worker.celery import app
 

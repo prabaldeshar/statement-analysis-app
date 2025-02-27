@@ -1,8 +1,9 @@
 from typing import Optional
 
 from sqlmodel import Field, Session, SQLModel, create_engine
+from api.config.settings import settings
 
-DATABASE_URL = "sqlite:///expenses.db"
+DATABASE_URL = f"postgresql://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}/{settings.DATABASE_NAME}"
 
 
 class Transaction(SQLModel, table=True):
@@ -17,11 +18,13 @@ class Transaction(SQLModel, table=True):
     transaction_id: str
 
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(DATABASE_URL, connect_args=connect_args)
+engine = create_engine(
+    DATABASE_URL,
+)
 
 
-SQLModel.metadata.create_all(engine)
+async def init_db():
+    SQLModel.metadata.create_all(engine)
 
 
 def get_session():

@@ -9,7 +9,7 @@ This application helps users analyze and track their expenses by processing bank
     - Bar charts for expense categories and payment methods.
     - Line charts for daily expenditure trends.
 - ⚡ FastAPI Backend: Provides APIs to fetch categorized transactions and spending insights.
-- 🎨 Next.js Frontend: Displays charts and tables using Recharts and Bootstrap styling.
+- 🎨 Next.js Frontend: Displays charts and tables using Recharts and Tailwind styling.
 
 ## Run the application
 Make sure you have docker and docker compose installed if you want to run the application using docker

@@ -1,9 +1,39 @@
 # Statement Analysis
-Analayze the statement using the description and extract useful information from them store them in DB. These stored information is used in FE to visualize the data.
+This application helps users analyze and track their expenses by processing bank statements. It provides insights into spending patterns using AI-powered expense categorization and interactive visualizations.
 
+## Key Features
 
-## Run in Docker
-Create and update the .env in the root folder
+- 📄 Bank Statement Processing: Upload statements for automatic transaction analysis.
+- 🤖 AI-Powered Categorization: Uses OpenAI’s API to classify expenses, detect payment methods, and identify recipients/sources.
+- 📊 Expense Insights & Forecasting:
+    - Bar charts for expense categories and payment methods.
+    - Line charts for daily expenditure trends.
+- ⚡ FastAPI Backend: Provides APIs to fetch categorized transactions and spending insights.
+- 🎨 Next.js Frontend: Displays charts and tables using Recharts and Bootstrap styling.
+
+## Run the application
+Make sure you have docker and docker compose installed if you want to run the application using docker
+
+### Run frontend 
+Go to the frontend directory
+
+```
+cd statement-analysis-fe
+```
+Then run the docker compose command
+```
+docker componse up --build -d
+```
+
+Access the application at http://localhost:3000
+
+### Run Backend
+Go the the backend directory
+
+```
+cd statement-analysis-be
+```
+Create and update the `.env` in the `statement-analysis-be` folder
 
 .env
 ```
@@ -15,42 +45,27 @@ DATABASE_NAME=statement-analysis
 DATABASE_PASSWORD=password
 ```
 
-Then run the command
-```shell
-docker compose up --build -d  
+Then run the docker compose command
 ```
+docker compose up --build -d
+```
+
 Server will run on the following URL http://localhost:8001
 
 Access the available APIs from http://localhost:8001/docs
 
+### How to use
+Download the bank statement from your mobile banking applicaition. 
 
-## Run locally
-1. Install redis locally
-2. Start the redis server
-2. Create .env file and add the OpenAI API key in the varaible `OPENAI_API_KEY`
+Go the the URL http://localhost:3000
 
-In .env file 
+Upload your statement by clicking the `Upload Statement` Button
 
-```
-OPENAI_API_KEY=YOUR_OPENAI_API_KEY
-REDIS_URL=YOUR_REDIS_URL
-DATABASE_HOST=YOUR_POSTGRES_DB_HOST_URL
-DATABASE_USER=POSTGRES_DB_USER_NAME
-DATABASE_NAME=statement-analysis
-DATABASE_PASSWORD=YOUR_PASSWORD
-```
+![Upload Statement](docs/images/uplaod_statement.png)
 
-**Create a python virtual environment.** 
+Here you can Select the excel file or drag and drop the statement.
 
-Then run the following commands
-```
-$ make install
-$ make dev
-$ make worker
-```
 
-- `make install` will install the required dependecies
-- `make dev` will run the fastapi dev server
-- `make worker` will run the celery worker 
+![Upload Dialog](docs/images/upload_dialog.png)
 
-Then the server will run on the following URL http://locahost:8001
+After selecting the file and uploadig it it takes some time to display the charts and table, refresh the page after some time to see the updated charts and graphs

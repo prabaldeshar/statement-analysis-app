@@ -1,8 +1,11 @@
-install:
-	python3 -m pip install -r requirements.txt
+frontend:
+	cd statement-analysis-fe && docker compose up --build -d
 
-dev:
-	uvicorn api.main:app --port 8001 --reload
+stop-frontend:
+	cd statement-analysis-fe && docker compose down
 
-worker:
-	celery -A api.worker.celery worker -l INFO
+backend:
+	cd statement-analysis-be && docker compose up --build -d
+
+stop-backend:
+	cd statement-analysis-be && docker compose down

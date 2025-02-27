@@ -28,6 +28,8 @@ class OpenAIService:
             presence_penalty=0,
         )
         response_choices = response.choices[0].message.content
+        print("Type of response", type(response_choices))
+        print("response choices ", response_choices)
         response_dict = eval(response_choices)
 
         return response_dict

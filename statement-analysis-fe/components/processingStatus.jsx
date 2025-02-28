@@ -16,12 +16,12 @@ export default function ProcessingStatus({taskStatus="SUCCESS", taskMessage="The
 
                 {taskStatus === "SUCCESS" && (
                     <div className="flex flex-col items-center">                     
-                        <div className="flex justify-center text-green-500">
-                            <CheckCircle2 className="w-10 h-1" />
+                        <div className="flex justify-center text-green-500 ">
+                            <CheckCircle2 className="w-10 h-10" />
                         </div>
-                        <p className="text-lg">{taskMessage}</p>
+                        <p className="text-md text-gray-700 my-2">{taskMessage}</p>
                         <button 
-                            className="px-3 py-2 bg-green-600 text-white  rounded-lg hover:bg-green-700 transition-all flex justify-center gap-2"
+                            className="px-3 py-2 text-md bg-green-100 text-black  rounded-lg hover:bg-green-200 transition-all flex justify-center gap-2"
                             onClick={() => window.location.reload()}
                         >
                             
@@ -36,9 +36,9 @@ export default function ProcessingStatus({taskStatus="SUCCESS", taskMessage="The
                         <div className="flex justify-center text-red-500">
                             <X className="w-10 h-10" />
                         </div>
-                        <p className="text-lg text-red-600">{taskMessage}</p>
+                        <p className="text-md text-gray-700 my-2">{taskMessage}</p>
                         <button
-                            className="px-3 py-2 bg-green-600 text-white  rounded-lg hover:bg-green-700 transition-all flex justify-center gap-2"
+                            className="px-3 py-2 bg-red-100 text-black  rounded-lg hover:bg-red-200 transition-all flex justify-center gap-2"
                             onClick={() => handlesetTaskStatus(null)}
                         >
                             Close

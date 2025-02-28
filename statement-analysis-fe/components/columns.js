@@ -30,16 +30,30 @@ fetch("http://localhost:8001/filter-fields/")
   })
   .catch(error => console.log("Error fetching expenses:", error));
 
-// TODO: Make the colors static after the categories has been fixed
-const categoryColors = {};
+const categoryColors = {
+  "Food & Beverages": "bg-cyan-500",
+  "Utility and Bill Payment": "bg-orange-600",
+  "General Household": "bg-amber-500",
+  "Education": "bg-lime-400",
+  "Health & Medicine": "bg-emerald-300",
+  "Financial Services": "bg-teal-600",
+  "Government Services": "bg-cyan-600",
+  "Online Shopping": "bg-indigo-300",
+  "Lifestyle & Entertainment": "bg-indigo-300",
+  "Transportation": "bg-neutral-400",
+  "Insurance": "bg-slate-700",
+  "Maintenance Services": "bg-zinc-300",
+  "Personal": "bg-violet-400",
+  "Others": "bg-rose-400"
+};
 
-function getCategoryColor(category) {
-  if (!categoryColors[category]) {
-    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 85%)`;
-    categoryColors[category] = randomColor;
-  }
-  return categoryColors[category];
-}
+// function getCategoryColor(category) {
+//   if (!categoryColors[category]) {
+//     const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 85%)`;
+//     categoryColors[category] = randomColor;
+//   }
+//   return categoryColors[category];
+// }
 
 
 
@@ -139,11 +153,10 @@ export const columns = [
     },
     cell: ({ row }) => {
       const category = row.getValue("category")
-      const bgColor = getCategoryColor(category);
+      const bgColor = categoryColors[category];
       return (
         <button 
-          className="px-3 py-2 text-md text-black  rounded-lg transition-all flex justify-center gap-2"
-          style={{ backgroundColor: bgColor }}
+          className={`px-3 py-2 text-md text-black  rounded-lg transition-all flex justify-center gap-2 ${bgColor}`}
         >
           {category}
         </button>

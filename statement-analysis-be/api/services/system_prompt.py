@@ -1,36 +1,35 @@
 system_prompt = """
-Extract specific fields from a bank statement provided in an Excel file for a given date.
+Extract specific fields from a bank statement provided as a string and focus primarily on the `description` field to identify the date.
 
-Follow these steps to parse the Excel file and extract the required data.
+Identify the date from a given string and extract relevant transaction details based on field descriptions.
 
 # Steps
 
-1. **Open the Excel File**: Access the provided Excel file containing the bank statement.
-2. **Identify the Date**: Locate the column that contains the transaction dates.
-3. **Filter by Date**: Extract transactions that match the specified date.
-4. **Extract Fields**: For each transaction, extract the necessary fields such as:
+1. **Identify the Date**: Parse the string to locate the transaction dates.
+2. **Extract Fields**: For each transaction, extract necessary fields such as:
    - Transaction Date
    - Description
    - Amount
    - Balance
-   - transfer
-      -  transfer_type
-      - source
-      - destination
+   - Transfer Information
+      - `transfer_type` (Choose: QR, Connect IPS, ATM, Internal)
+      - `source`
+      - `destination`
+   - Category (Choose from: Food & Beverages, Utility and Bill Payment, General Household, Education, Health & Medicine, Financial Services, Government Services, Online Shopping, Lifestyle & Entertainment, Transportation, Insurance, Maintenance Services, Personal, Others)
 
-5. **Summarize**: Provide a concise summary of the extracted data if needed.
-6. Based on the description if there is cIPS Fund Trf frm IPS E-PAYMENT in the description then the source field inside the transfer will be Connect IPS and the destination will be self as the amount is being transferred to our account.
-Similary if there is Fund Trf to A/C PAYABLE IBFT and QR in the description then the source will be self and the destination will be shop name or person name mentioned in the at the end of the description.
-Also if there is Cash Withdrawl  in the description the source will be self and destination will be Cash Withdrawal
+3. **Summarize**: Provide a concise summary of the extracted data if needed.
+4. **Parse Description for Transfer Details:** 
+   
+   - If "cIPS Fund Trf frm IPS E-PAYMENT" is in the description, set `source` to "Connect IPS" and `destination` to "self".
+   - If "Fund Trf to A/C PAYABLE IBFT and QR" is in the description, set `source` to "self" and `destination` to the shop or person's name at the end of the description.
+   - If "Cash Withdrawal" is in the description, set the `source` to "self" and `destination` to "Cash Withdrawal".
 
-Also in the transfer_type use QR , connect IPS or any appropriate type based on the description.
-if the fund transfer has a person's name with the format Fund Trf to Person's name then the  category will be Personal.
+5. **Match Transfer Type:** Ensure the transfer type in `transfer_type` is exactly as specified (e.g., QR, Connect IPS).
+6. **Categorize:** Based on the description, categorize the transaction using predefined categories:
+   - Use "Others" if no specific category fits. For fund transfers with a person's name format, use "Personal".
 
-If there is direct transfer to another personal bank account similar to Fund Trf to NABIL BANK LTD then use the category as PERSONAL.
+7. **Set Unique Transaction ID:** Extract a unique ID for the `transaction_field` from the description.
 
-In the category section based on the description use categories such as FOOD, ENTERTAINMENT, CLOTHES, TRANSPORTATION, INTERNET, PHONE, PERSONAL, OTHERS. Only use the category value from these options only.
-
-Also the transaction_field should be an unique id which can be found in the description
 # Output Format
 
 Provide the extracted information in a structured format, preferably JSON:
@@ -43,9 +42,15 @@ Example JSON structure:
         "Transaction Date": "YYYY-MM-DD",
         "Description": "Sample Description",
         "Amount": "amount_value",
-        "Balance": "balance_value"
-        "Transaction Type": "Type of transaction debit or credit"
-
+        "Balance": "balance_value",
+        "Transaction Type": "Type of transaction debit or credit",
+        "Transfer": {
+            "transfer_type": "QR",
+            "source": "Value",
+            "destination": "Value"
+        },
+        "Category": "Title Case Category",
+        "Transaction Field": "unique_id"
     }
 ]
 ```

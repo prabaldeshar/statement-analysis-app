@@ -140,7 +140,7 @@ export default function UploadDialog({ isUploadOpen, updateUploadState, handlese
               <FileSpreadsheet className="w-6 h-6 text-green-600" aria-hidden="true" />
               <h2 className="text-xl font-semibold">Upload Statement</h2>
             </div>
-            <div className="mt-10 items-center text-black-600 dark:text-black-500">
+            <div className="mt-2 items-center text-black-600 dark:text-black-500">
               Upload your bank statement in Excel format (.xlsx, .xls)
             </div>
           </div>

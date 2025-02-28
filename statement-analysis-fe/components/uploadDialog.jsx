@@ -8,7 +8,9 @@ import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import { cn } from "@/lib/utils"
 import { Spinner } from "@/components/ui/spinner"
 
-export default function UploadDialog({ isUploadOpen, updateUploadState }) {
+
+
+export default function UploadDialog({ isUploadOpen, updateUploadState, handlesetTaskStatus, handlesetTaskMessage }) {
   const [file, setFile] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
@@ -19,6 +21,29 @@ export default function UploadDialog({ isUploadOpen, updateUploadState }) {
       setFile(null)
     }
   }, [isUploadOpen])
+
+  const startPolling = (taskId) => {
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch(`http://localhost:8001/tasks/status/${taskId}`);
+            const data = await response.json();
+
+            console.log(data)
+  
+            handlesetTaskStatus(data.status);
+            handlesetTaskMessage(data.message);
+  
+            if (data.status === "SUCCESS" || data.status === "FAILED") {
+                clearInterval(interval); // Stop polling
+            }
+        } catch (error) {
+            console.error("Polling error:", error);
+            clearInterval(interval);
+            handlesetTaskStatus("FAILED");
+            // setTaskMessage("An error occurred while checking the status.");
+        }
+    }, 3000); // Poll every 3 seconds
+  };
 
   const handleFileDrop = (e) => {
     e.preventDefault()
@@ -64,13 +89,24 @@ export default function UploadDialog({ isUploadOpen, updateUploadState }) {
             method: "POST",
             body: formData,
         })
-
+        
         if (!response.ok) {
-            throw new Error("Failed to upload file")
+          throw new Error("Failed to upload file")
         }
+        
         setFile(null)
         updateUploadState(false)
-        window.location.reload()
+        
+        const data = await response.json();
+        const task_id = data.task_id
+
+        console.log("Post request data")
+        console.log(data)
+        console.log("Task ID")
+        console.log(task_id)
+        
+        handlesetTaskStatus("PENDING")
+        startPolling(task_id)
     } catch (error) {
         alert(error.message)
     } finally {

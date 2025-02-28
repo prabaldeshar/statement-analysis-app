@@ -30,6 +30,18 @@ fetch("http://localhost:8001/filter-fields/")
   })
   .catch(error => console.log("Error fetching expenses:", error));
 
+// TODO: Make the colors static after the categories has been fixed
+const categoryColors = {};
+
+function getCategoryColor(category) {
+  if (!categoryColors[category]) {
+    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 85%)`;
+    categoryColors[category] = randomColor;
+  }
+  return categoryColors[category];
+}
+
+
 
 function DataTableColumnHeader({ column, title, className }) {
   if (!column.getCanSort()) {
@@ -127,10 +139,14 @@ export const columns = [
     },
     cell: ({ row }) => {
       const category = row.getValue("category")
+      const bgColor = getCategoryColor(category);
       return (
-        <div className="flex items-center justify-start w-full">
+        <button 
+          className="px-3 py-2 text-md text-black  rounded-lg transition-all flex justify-center gap-2"
+          style={{ backgroundColor: bgColor }}
+        >
           {category}
-        </div>
+        </button>
       )
     },
   },

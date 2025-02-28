@@ -131,7 +131,7 @@ export default function Home() {
         )}
       <UploadDialog updateUploadState={updateUploadState} isUploadOpen={isUploadOpen} handlesetTaskStatus={handlesetTaskStatus} handlesetTaskMessage={handlesetTaskMessage}/>
       <div className="flex justify-end md:fixed md:right-8 md:top-8">
-        <Button onClick={() => setIsUploadOpen(true)} className="flex items-center gap-2">
+        <Button onClick={() => setIsUploadOpen(true)} className="flex items-center gap-2 bg-green-500 hover:bg-green-700">
           <Upload className="w-4 h-4" />
           Upload Statement
         </Button>

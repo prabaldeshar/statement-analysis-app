@@ -24,7 +24,7 @@ const chartConfig = {
   },
 }
 
-export function ChartBar({chartData, title="Bar Chart", dateRange="January - June 2024", dataKey="category"}) {
+export function ChartBar({chartData, title="Bar Chart", dateRange="January - June 2024", dataKey="Category", name="Category"}) {
   return (
     <Card>
       <CardHeader>
@@ -40,8 +40,7 @@ export function ChartBar({chartData, title="Bar Chart", dateRange="January - Jun
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}
-              tick={{ fontSize: 10 }}
+              tick={{ fontSize: 12 }}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
@@ -53,7 +52,7 @@ export function ChartBar({chartData, title="Bar Chart", dateRange="January - Jun
         <div className="flex gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
-        <div className="leading-none text-muted-foreground">Showing expenses by Category</div>
+        <div className="leading-none text-muted-foreground">Showing expenses by {name}</div>
       </CardFooter>
     </Card>
   )

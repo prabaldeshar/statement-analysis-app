@@ -1,7 +1,8 @@
 import ipdb
 from sqlmodel import Session
 
-from api.db.core import get_session
+from api.db.core import get_session, Transaction
+from sqlmodel import select
 
 db: Session = next(get_session())
 

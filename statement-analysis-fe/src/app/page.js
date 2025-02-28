@@ -139,9 +139,11 @@ export default function Home() {
     <div className="flex min-h-svh items-center justify-center p-6 flex-col w-full">
   {/* Charts Grid */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
-    <ChartBar chartData={categoryBarChartData} title="Bar Chart - Category" dataKey="category" />
-    <ChartBar chartData={paymentMethodBarChartData} title="Bar Chart - Payment Method" dataKey="payment_method" />
+    <div className="col-span-2">
+    <ChartBar chartData={categoryBarChartData} title="Bar Chart - Category" dataKey="category" name="Category" />
+    </div>
     <ChartLine chartData={expensesLineChartData} XAxisDataKey="date" LineDataKey="amount" />
+    <ChartBar chartData={paymentMethodBarChartData} title="Bar Chart - Payment Method" dataKey="payment_method" name="Payment Method"/>
   </div>
 
   {/* DataTable in a separate row */}

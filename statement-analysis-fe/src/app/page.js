@@ -10,6 +10,7 @@ import { DataTable } from "../../components/data-table";
 import { Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import UploadDialog from "../../components/uploadDialog";
+import ProcessingStatus from "../../components/processingStatus";
 
 function getData() {
   // Fetch data from your API here.
@@ -42,15 +43,9 @@ export default function Home() {
   const [expensesLineChartData, setExpensesLineChartData] = useState([]);
   const [transactionTableList, setTransactionTableList] = useState([]);
   const [isUploadOpen, setIsUploadOpen] = useState(false); 
+  const [taskStatus, setTaskStatus] = useState(null);
+  const [taskMessage, setTaskMessage] = useState(null);
 
-  const chartData = [
-    { date: "January", amount: 186 },
-    { date: "February", amount: 305 },
-    { date: "March", amount: 237 },
-    { date: "April", amount: 73 },
-    { date: "May", amount: 209 },
-    { date: "June", amount: 214 },
-  ]
 
   const updateUploadState = (uploadState) => {
     setIsUploadOpen(uploadState)
@@ -116,12 +111,25 @@ export default function Home() {
       .catch(error => console.log("Error fetching expenses:", error));
   }, [])
 
+  const handlesetTaskStatus = (status) => {
+    setTaskStatus(status)
+  }
+
+  const handlesetTaskMessage = (message) => {
+    setTaskMessage(message)
+  }
+  
+
+  
   const tableData = getData();
 
   return (
     <>
-    <main className="min-h-screen p-8">
-      <UploadDialog updateUploadState={updateUploadState} isUploadOpen={isUploadOpen}/>
+    <main className="min-h-screen p-8 flex flex-col items-center justify-center">
+    {taskStatus && (
+          <ProcessingStatus taskStatus={taskStatus} taskMessage={taskMessage} handlesetTaskStatus={handlesetTaskStatus} />
+        )}
+      <UploadDialog updateUploadState={updateUploadState} isUploadOpen={isUploadOpen} handlesetTaskStatus={handlesetTaskStatus} handlesetTaskMessage={handlesetTaskMessage}/>
       <div className="flex justify-end md:fixed md:right-8 md:top-8">
         <Button onClick={() => setIsUploadOpen(true)} className="flex items-center gap-2">
           <Upload className="w-4 h-4" />

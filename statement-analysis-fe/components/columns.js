@@ -170,6 +170,27 @@ export const columns = [
   {
     accessorKey: "type_of_transaction",
     header: ({ column }) => <DataTableFilter column={column} title="Transaction Type" options={transactionTypeOptions} />,
+    cell: ({ row }) => {
+      const category = row.getValue("type_of_transaction")
+      const bgColor = categoryColors[category];
+
+      if (category.toLowerCase() == "withdraw") {
+        return (
+          <div className="flex items-center space-x-2">
+            <ArrowUp size={24} color="red" strokeWidth={2}/>
+            {category}
+          </div>
+        )
+      }
+      else {
+        return (
+          <div className="flex items-center space-x-2">
+            <ArrowDown size={24} color="green" strokeWidth={2} />
+            {category}
+          </div>
+        )
+      }
+    },
     filterFn: (row, id, value) => {
       return value ? row.getValue(id).toLowerCase() === value.toLowerCase() : true
     },

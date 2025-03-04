@@ -15,7 +15,7 @@ import {
 
 const chartConfig = {
   amount: {
-    label: "Amount",
+    label: "Category",
     color: "hsl(var(--chart-2))",
   },
   mobile: {
@@ -40,7 +40,8 @@ export function ChartBar({chartData, title="Bar Chart", dateRange="January - Jun
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 11, width: 50, wordWrap: "break-word" }}
+              interval={0}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
